@@ -1,0 +1,38 @@
+[
+    {
+        "nombre": "Santiago",
+        "apellido": "",
+        "cedula": "1070600370",
+        "foto": "./assets/persona.png",
+        "hora": "6:00",
+        "sector": "Tocaima",
+        "taxi": "Carro seleccionado: ABC123"
+    },
+    {
+        "nombre": "Santiago",
+        "apellido": "",
+        "cedula": "1070600370",
+        "foto": "./assets/persona.png",
+        "hora": "6:30",
+        "sector": "Agua de dios",
+        "taxi": "Carro seleccionado: Kia - QRS789"
+    },
+    {
+        "nombre": "Santiago",
+        "apellido": "",
+        "cedula": "1070600370",
+        "foto": "./assets/persona.png",
+        "hora": "7:00",
+        "sector": "Agua de dios",
+        "taxi": "Carro seleccionado: Kia - QRS789"
+    },
+    {
+        "nombre": "Santiago",
+        "apellido": "",
+        "cedula": "1070600370",
+        "foto": "./assets/persona.png",
+        "hora": "9:30",
+        "sector": "La mesa",
+        "taxi": "Carro seleccionado: Chevrolet - HGF123"
+    }
+]

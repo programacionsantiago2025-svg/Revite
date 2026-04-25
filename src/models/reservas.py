@@ -1,0 +1,45 @@
+import csv
+import json
+import os
+from src.models.clientes import Cliente
+from datetime import datetime
+import flet as ft
+fecha_actual = datetime.now()
+horas = ["5:00", "5:30", "6:00"]
+sectores = []
+class Reserva(Cliente):
+    def __init__(self, nombre, apellido, cedula, foto, hora, sector,taxi_seleccionado):
+        super().__init__(nombre, apellido, cedula, foto)
+        self.__hora = hora
+        self.__sector = sector
+        self.__taxi_seleccionado = taxi_seleccionado
+        self.carros = []
+
+    def get_hora(self):
+        return self.__hora
+    def get_sector(self):
+        return self.__sector
+    def get_taxi(self):
+        return self.__taxi_seleccionado
+    def ver_carros(self):
+        if not self.carros:
+            print("No hay reservas")
+            return
+def guardar_json(nueva):
+    ruta = "src/data/reservas.json"
+    if not os.path.exists(ruta):
+        with open(ruta, "w") as f:
+            json.dump([], f)
+    with open(ruta, "r", encoding="utf-8") as archivo:
+        datos = json.load(archivo)
+    datos.append({
+        "nombre": nueva.get_nombre(),
+        "apellido": nueva.get_apellido(),
+        "cedula": nueva.get_cedula(),
+        "foto": nueva.foto,
+        "hora": nueva.get_hora(),
+        "sector": nueva.get_sector(),
+        "taxi": nueva.get_taxi()
+    })
+    with open(ruta, "w", encoding="utf-8") as archivo:
+        json.dump(datos, archivo, indent=4)

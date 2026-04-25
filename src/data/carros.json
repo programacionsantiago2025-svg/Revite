@@ -1,0 +1,37 @@
+[
+    {
+        "placa": "HGF123",
+        "marca": "Chevrolet",
+        "modelo": "Onix 2022",
+        "mantenimiento": true,
+        "capacidad": 5
+    },
+    {
+        "placa": "KLM456",
+        "marca": "Renault",
+        "modelo": "Logan 2021",
+        "mantenimiento": false,
+        "capacidad": 5
+    },
+    {
+        "placa": "QRS789",
+        "marca": "Kia",
+        "modelo": "Picanto 2023",
+        "mantenimiento": false,
+        "capacidad": 4
+    },
+    {
+        "placa": "TUV234",
+        "marca": "Hyundai",
+        "modelo": "Accent 2020",
+        "mantenimiento": true,
+        "capacidad": 5
+    },
+    {
+        "placa": "XYZ567",
+        "marca": "Mazda",
+        "modelo": "Mazda 2 2022",
+        "mantenimiento": false,
+        "capacidad": 5
+    }
+]
