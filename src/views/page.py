@@ -37,6 +37,25 @@ def main(page: ft.Page):
     def seleccionar_taxi(e):
         texto_taxi.value = f"Carro seleccionado: {e.control.data}"
         page.update()
+    def crear_reserva_args(*args):
+        nueva = Reserva(
+            args[0],
+            args[1],
+            args[2],
+            args[3],
+            args[4],
+            args[5],
+            args[6]
+    )
+        guardar_json(
+            nombre=nueva.get_nombre(),
+            apellido=nueva.get_apellido(),
+            cedula=nueva.get_cedula(),
+            foto=nueva.foto,
+            hora=nueva.get_hora(),
+            sector=nueva.get_sector(),
+            taxi=nueva.get_taxi()
+    )
     def crear_reserva():
         nombre = input_nombre.value
         cedula = input_cedula.value
@@ -44,17 +63,28 @@ def main(page: ft.Page):
         sector = radios.value
         hora = None
         taxi_seleccionado = texto_taxi.value
+
         for check in checks:
             if check.value:  
                 hora = check.label
                 break
+
         if not nombre or not cedula or not sector or not hora:
             page.snack_bar = ft.SnackBar(ft.Text("Complete todos los campos"))
             page.snack_bar.open = True
             page.update()
             return
-        nueva_reserva = Reserva(nombre, "", cedula, foto, hora, sector,taxi_seleccionado)
-        guardar_json(nueva_reserva)
+
+        crear_reserva_args(
+            nombre,
+            "",  
+            cedula,
+            foto,
+            hora,
+            sector,
+            taxi_seleccionado
+        )
+
         page.snack_bar = ft.SnackBar(ft.Text(f"Reserva creada para {nombre}"))
         page.snack_bar.open = True
         page.update()

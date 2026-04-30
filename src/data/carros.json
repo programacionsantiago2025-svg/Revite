@@ -33,5 +33,12 @@
         "modelo": "Mazda 2 2022",
         "mantenimiento": false,
         "capacidad": 5
+    },
+    {
+        "placa": "ABC",
+        "marca": "NOSE",
+        "modelo": "Ultimo",
+        "mantenimiento": true,
+        "capacidad": "5"
     }
 ]
