@@ -6,6 +6,9 @@ from src.models.reservas import Reserva, guardar_json
 from src.components.navbar import navbar
 from src.views.page2 import vista_reservas
 from src.models.carro import Carro, guardar_json_carro
+from src.data.base_de_datos_reservas import crear_base_de_datos_reservas,insertar_reserva
+from src.data.base_de_datos_cliente import crear_base_de_datos_cliente,insertar_cliente
+from src.data.base_de_datos_carros import crear_base_de_datos_carros,insertar_carro,consultar_carros
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 def main(page: ft.Page):
@@ -84,7 +87,8 @@ def main(page: ft.Page):
             sector,
             taxi_seleccionado
         )
-
+        insertar_cliente(nombre, "", cedula, foto)
+        insertar_reserva(nombre, "", cedula, foto, hora, sector, taxi_seleccionado)
         page.snack_bar = ft.SnackBar(ft.Text(f"Reserva creada para {nombre}"))
         page.snack_bar.open = True
         page.update()
@@ -101,6 +105,7 @@ def main(page: ft.Page):
         capacidad = input_capacidad.value
         nuevo_carro = Carro(placa, marca, modelo, mantenimiento, capacidad)
         guardar_json_carro(nuevo_carro)
+        insertar_carro(placa, marca, modelo, mantenimiento, capacidad)
         nuevo_cuadro = ft.Container(
             width=150,
             height=100,
@@ -124,8 +129,20 @@ def main(page: ft.Page):
 
     with open("src/data/destinos.json", "r", encoding="utf-8") as archivo:
         sectores = json.load(archivo)
+    """
     with open("src/data/carros.json", "r", encoding="utf-8") as archivo:
         carros = json.load(archivo)
+    """
+    carros = []
+    datos_bd = consultar_carros()
+
+    for carro in datos_bd:
+        carros.append({
+            "placa": carro[1],
+            "marca": carro[2],
+            "capacidad": carro[5]
+        })
+    
     for hora in horarios:
         check = ft.Checkbox(label=hora)
         checks.append(check)
@@ -261,15 +278,18 @@ def main(page: ft.Page):
                 ),
                 ft.Row(
                     controls=[
+                        ft.ElevatedButton("Base de datos clientes", on_click= lambda e: crear_base_de_datos_cliente()),
+                        ft.ElevatedButton("Base de datos reservas", on_click= lambda e: crear_base_de_datos_reservas()),
+                        ft.ElevatedButton("Base de datos carros", on_click= lambda e: crear_base_de_datos_carros()),
                         ft.ElevatedButton(
                             "Crear reserva",
                             on_click=lambda e: crear_reserva()
                         )
                     ],
-                    alignment=ft.MainAxisAlignment.CENTER
+                    alignment=ft.MainAxisAlignment.CENTER,
+                    spacing=10
                 ),
-            ],
-            horizontal_alignment=ft.CrossAxisAlignment.CENTER
+            ]  
         )
     def vista_carro():
         return ft.Column(

@@ -1,27 +1,39 @@
 import flet as ft
-import json
 from src.models.reservas import Reserva
+from src.data.base_de_datos_reservas import consultar_usuarios
 
 
 def procesar_reservas(funcion):
     def funcion_modificada():
         try:
-            with open("src/data/reservas.json", "r", encoding="utf-8") as archivo:
-                datos = json.load(archivo)
+            datos = consultar_usuarios()
+
+            if not datos:
+                return ft.Column(
+                    controls=[ft.Text("No hay reservas")]
+                )
+
             carros = []
+
             for fila in datos:
                 nueva = Reserva(
-                    fila["nombre"],
-                    fila["apellido"],
-                    fila["cedula"],
-                    fila["foto"],
-                    fila["hora"],
-                    fila["sector"],
-                    fila["taxi"]
+                    fila[1],  
+                    fila[2],  
+                    fila[3],  
+                    fila[4],  
+                    fila[5],  
+                    fila[6], 
+                    fila[7],  
                 )
+
                 agregado = False
+
                 for carro in carros:
-                    if carro["hora"] == fila["hora"] and carro["sector"] == fila["sector"]:
+                    if (
+                        carro["hora"] == fila[5]
+                        and carro["sector"] == fila[6]
+                        and carro["taxi"] == fila[7]
+                    ):
                         if len(carro["pasajeros"]) < 4:
                             carro["pasajeros"].append(nueva)
                             agregado = True
@@ -29,23 +41,27 @@ def procesar_reservas(funcion):
 
                 if not agregado:
                     carros.append({
-                        "hora": fila["hora"],
-                        "sector": fila["sector"],
+                        "hora": fila[5],
+                        "sector": fila[6],
+                        "taxi": fila[7],
                         "pasajeros": [nueva]
                     })
 
             return funcion(carros)
 
-        except:
+        except Exception as e:
+            print("Error:", e)
             return ft.Column(
-                controls=[ft.Text("No hay reservas")]
+                controls=[ft.Text("Error al cargar reservas")]
             )
+
     return funcion_modificada
 
 
 @procesar_reservas
 def vista_reservas(carros):
     cards = []
+
     for i, carro in enumerate(carros):
         card = ft.Container(
             bgcolor=ft.Colors.WHITE,
@@ -54,15 +70,18 @@ def vista_reservas(carros):
             shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.BLACK),
             content=ft.Column(
                 controls=[
-                    ft.Text(f"Carro {i+1}", weight=ft.FontWeight.BOLD),
+                    ft.Text(f"🚖 Carro {i+1}", weight=ft.FontWeight.BOLD),
                     ft.Text(f"Hora: {carro['hora']}"),
                     ft.Text(f"Sector: {carro['sector']}"),
+                    ft.Text(f"Taxi: {carro['taxi']}"),
                     ft.Text(f"Pasajeros: {len(carro['pasajeros'])}/4"),
+
+                    ft.Divider(),
 
                     ft.Column(
                         controls=[
                             ft.Text(
-                                f"- {p.get_nombre()} {p.get_apellido()} | CC: {p.get_cedula()} | Taxi: {p.get_taxi()}"
+                                f"- {p.get_nombre()} {p.get_apellido()} | CC: {p.get_cedula()}"
                             )
                             for p in carro["pasajeros"]
                         ]
@@ -75,7 +94,7 @@ def vista_reservas(carros):
 
     return ft.Column(
         controls=[
-            ft.Text("📋 LISTA DE RESERVAS", size=20, weight=ft.FontWeight.BOLD),
+            ft.Text("📋 LISTA DE RESERVAS (BD)", size=20, weight=ft.FontWeight.BOLD),
 
             ft.GridView(
                 controls=cards,

@@ -40,5 +40,61 @@
         "modelo": "Ultimo",
         "mantenimiento": true,
         "capacidad": "5"
+    },
+    {
+        "placa": "ABC123",
+        "marca": "CHEVROLET",
+        "modelo": "2",
+        "mantenimiento": true,
+        "capacidad": "5"
+    },
+    {
+        "placa": "a",
+        "marca": "a",
+        "modelo": "a",
+        "mantenimiento": true,
+        "capacidad": "a"
+    },
+    {
+        "placa": "ABCDE",
+        "marca": "CHEVROLET",
+        "modelo": "123",
+        "mantenimiento": true,
+        "capacidad": "12312"
+    },
+    {
+        "placa": "ABC123",
+        "marca": "CHEVROLET",
+        "modelo": "2025",
+        "mantenimiento": true,
+        "capacidad": "2"
+    },
+    {
+        "placa": "DEF123",
+        "marca": "TOYOTA",
+        "modelo": "2022",
+        "mantenimiento": true,
+        "capacidad": "2"
+    },
+    {
+        "placa": "XEF223",
+        "marca": "MERCEDEZ",
+        "modelo": "2024",
+        "mantenimiento": true,
+        "capacidad": "2"
+    },
+    {
+        "placa": "ABC123",
+        "marca": "CHEVROLET",
+        "modelo": "2025",
+        "mantenimiento": true,
+        "capacidad": "4"
+    },
+    {
+        "placa": "CEF223",
+        "marca": "MERCEDEZ",
+        "modelo": "2022",
+        "mantenimiento": true,
+        "capacidad": "4"
     }
 ]
