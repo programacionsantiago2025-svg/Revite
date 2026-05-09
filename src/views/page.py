@@ -106,7 +106,7 @@ def main(page: ft.Page):
         nuevo_carro = Carro(placa, marca, modelo, mantenimiento, capacidad)
         guardar_json_carro(nuevo_carro)
         insertar_carro(placa, marca, modelo, mantenimiento, capacidad)
-        nuevo_cuadro = ft.Container(
+        nuevo_cuadro = ft.Container( 
             width=150,
             height=100,
             bgcolor=ft.Colors.WHITE,
