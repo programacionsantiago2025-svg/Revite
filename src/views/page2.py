@@ -1,10 +1,10 @@
 import flet as ft
 from src.models.reservas import Reserva
-from src.data.base_de_datos_reservas import consultar_usuarios
+from src.data.base_de_datos_reservas import consultar_usuarios, eliminar_reserva
 
 
 def procesar_reservas(funcion):
-    def funcion_modificada():
+    def funcion_modificada(page: ft.Page):
         try:
             datos = consultar_usuarios()
 
@@ -17,13 +17,13 @@ def procesar_reservas(funcion):
 
             for fila in datos:
                 nueva = Reserva(
-                    fila[1],  
-                    fila[2],  
-                    fila[3],  
-                    fila[4],  
-                    fila[5],  
-                    fila[6], 
-                    fila[7],  
+                    fila[1],
+                    fila[2],
+                    fila[3],
+                    fila[4],
+                    fila[5],
+                    fila[6],
+                    fila[7],
                 )
 
                 agregado = False
@@ -35,7 +35,10 @@ def procesar_reservas(funcion):
                         and carro["taxi"] == fila[7]
                     ):
                         if len(carro["pasajeros"]) < 4:
-                            carro["pasajeros"].append(nueva)
+                            carro["pasajeros"].append({
+                                "id": fila[0],
+                                "data": nueva
+                            })
                             agregado = True
                             break
 
@@ -44,10 +47,13 @@ def procesar_reservas(funcion):
                         "hora": fila[5],
                         "sector": fila[6],
                         "taxi": fila[7],
-                        "pasajeros": [nueva]
+                        "pasajeros": [{
+                            "id": fila[0],
+                            "data": nueva
+                        }]
                     })
 
-            return funcion(carros)
+            return funcion(page, carros)
 
         except Exception as e:
             print("Error:", e)
@@ -58,33 +64,85 @@ def procesar_reservas(funcion):
     return funcion_modificada
 
 
-@procesar_reservas
-def vista_reservas(carros):
-    cards = []
+def eliminar_y_recargar(e, id_reserva, page):
+    try:
+        eliminar_reserva(id_reserva)
+        page.update()
+    except Exception as error:
+        page.update()
 
+
+@procesar_reservas
+def vista_reservas(page: ft.Page, carros):
+    cards = []
     for i, carro in enumerate(carros):
+        pasajeros_controls = []
+        for pasajero in carro["pasajeros"]:
+            p = pasajero["data"]
+            id_reserva = pasajero["id"]
+
+            pasajeros_controls.append(
+                ft.Container(
+                    padding=10,
+                    border_radius=10,
+                    bgcolor=ft.Colors.GREY_100,
+                    content=ft.Column(
+                        controls=[
+                            ft.Text(
+                                f"- {p.get_nombre()} {p.get_apellido()}",
+                                weight=ft.FontWeight.BOLD
+                            ),
+
+                            ft.Text(
+                                f"CC: {p.get_cedula()}"
+                            ),
+
+                            ft.ElevatedButton(
+                                "Eliminar reserva",
+                                icon=ft.Icons.DELETE,
+                                bgcolor=ft.Colors.RED,
+                                color=ft.Colors.WHITE,
+                                on_click=lambda e,
+                                id_reserva=id_reserva:
+                                eliminar_y_recargar(
+                                    e,
+                                    id_reserva,
+                                    page
+                                )
+                            )
+                        ]
+                    )
+                )
+            )
+
         card = ft.Container(
             bgcolor=ft.Colors.WHITE,
             border_radius=12,
             padding=15,
-            shadow=ft.BoxShadow(blur_radius=10, color=ft.Colors.BLACK),
+            shadow=ft.BoxShadow(
+                blur_radius=10,
+                color=ft.Colors.BLACK12
+            ),
             content=ft.Column(
                 controls=[
-                    ft.Text(f"🚖 Carro {i+1}", weight=ft.FontWeight.BOLD),
+                    ft.Text(
+                        f"🚖 Carro {i+1}",
+                        weight=ft.FontWeight.BOLD,
+                        size=18
+                    ),
+
                     ft.Text(f"Hora: {carro['hora']}"),
                     ft.Text(f"Sector: {carro['sector']}"),
                     ft.Text(f"Taxi: {carro['taxi']}"),
-                    ft.Text(f"Pasajeros: {len(carro['pasajeros'])}/4"),
+
+                    ft.Text(
+                        f"Pasajeros: {len(carro['pasajeros'])}/4"
+                    ),
 
                     ft.Divider(),
 
                     ft.Column(
-                        controls=[
-                            ft.Text(
-                                f"- {p.get_nombre()} {p.get_apellido()} | CC: {p.get_cedula()}"
-                            )
-                            for p in carro["pasajeros"]
-                        ]
+                        controls=pasajeros_controls
                     )
                 ]
             )
@@ -94,15 +152,29 @@ def vista_reservas(carros):
 
     return ft.Column(
         controls=[
-            ft.Text("📋 LISTA DE RESERVAS (BD)", size=20, weight=ft.FontWeight.BOLD),
+            ft.Text(
+                "📋 LISTA DE RESERVAS (BD)",
+                size=20,
+                weight=ft.FontWeight.BOLD
+            ),
 
-            ft.GridView(
-                controls=cards,
-                expand=True,
-                max_extent=300,
+            ft.ResponsiveRow(
+                controls=[
+                    ft.Container(
+                        content=card,
+                        col={
+                            "sm": 12,
+                            "md": 6,
+                            "lg": 4,
+                            "xl": 3
+                        }
+                    )
+                    for card in cards
+                ],
                 spacing=10,
                 run_spacing=10
             )
         ],
-        scroll=ft.ScrollMode.AUTO
+        scroll=ft.ScrollMode.AUTO,
+        expand=True
     )

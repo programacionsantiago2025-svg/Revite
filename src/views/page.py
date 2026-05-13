@@ -304,7 +304,7 @@ def main(page: ft.Page):
         if vista == "inicio":
             contenido.controls = [vista_inicio()]
         elif vista == "reservas":
-            contenido.controls = [vista_reservas()]
+            contenido.controls = [vista_reservas(page)]
         elif vista == "carro":
             contenido.controls = [vista_carro()]
         

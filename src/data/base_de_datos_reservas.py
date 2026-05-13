@@ -58,7 +58,17 @@ def consultar_usuarios():
         if conexion:
             conexion.close()
     return usuarios
+def eliminar_reserva(id_reserva):
+    conexion = sqlite3.connect(nombre_bd)
+    cursor = conexion.cursor()
 
+    cursor.execute(
+        "DELETE FROM reservas WHERE id = ?",
+        (id_reserva,)
+    )
+
+    conexion.commit()
+    conexion.close()
 #ACA CREAMOS LA TABLA EL ID SIEMPRE VA ES PARA QUE ME ORGANICE LA TABLA CON ELA UTOICREMENT PARA QUE SE
 #ME INCREMENTE MEDIANTE LOS USUARIOS QUE LLEGUEN
 # Y LA FECHA DE REGISTRO ES LA FECHA DE LO QUE SE ME CREARON

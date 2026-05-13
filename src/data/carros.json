@@ -96,5 +96,12 @@
         "modelo": "2022",
         "mantenimiento": true,
         "capacidad": "4"
+    },
+    {
+        "placa": "ABC123",
+        "marca": "CHEVROLET",
+        "modelo": "20205",
+        "mantenimiento": true,
+        "capacidad": "4"
     }
 ]
